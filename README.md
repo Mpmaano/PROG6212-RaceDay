@@ -52,9 +52,11 @@
 
 # 
 
-# \## CI/CD
+## CI/CD
+A GitHub Actions workflow is configured to validate that all required planning documents exist in the `/docs` folder.
 
-# A GitHub Actions workflow is configured to validate that all required planning documents exist in the `/docs` folder.
+![CI Success](docs/CI-Success.png)
+
 
 # 
 
