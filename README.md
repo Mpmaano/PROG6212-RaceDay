@@ -1,78 +1,84 @@
-# \# RaceDay - Event Management System
+-- =====================================================
+-- Q.1.1  Create the database and tables from the ERD
+-- =====================================================
 
-# 
+CREATE DATABASE DEBATES;
+USE DEBATES;
 
-# \## Description
+-- Faculty table
+CREATE TABLE Faculty (
+    FacultyID   VARCHAR(10)  NOT NULL,
+    FacultyName VARCHAR(100) NOT NULL,
+    PRIMARY KEY (FacultyID)
+);
 
-# RaceDay is a full-stack web-based event management system designed for the South African road running, walking, and cycling community. 
+-- Venue table
+CREATE TABLE Venue (
+    VenueID      VARCHAR(10)  NOT NULL,
+    VenueName    VARCHAR(100) NOT NULL,
+    VenueAddress VARCHAR(200) NOT NULL,
+    PRIMARY KEY (VenueID)
+);
 
-# It allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse events, enrol, and track their performance.
-
-# 
-
-# \## Roles
-
-# 
-
-# \### Organiser
-
-# \- Create, edit and delete events
-
-# \- Manage event categories
-
-# \- Capture participant results
-
-# \- View all event enrolments
-
-# 
-
-# \### Participant
-
-# \- Create an account
-
-# \- Browse upcoming events
-
-# \- Enrol in an event by selecting a category
-
-# \- View their own enrolments
-
-# \- Track personal results
-
-# 
-
-# \## Part 1 Planning Documents
-
-# All planning documents are located in the `/docs` folder:
-
-# \- Entity Relationship Diagram (ERD)
-
-# \- API Endpoint Plan
-
-# \- SQL Database Script
-
-# 
-
-## CI/CD
-A GitHub Actions workflow is configured to validate that all required planning documents exist in the `/docs` folder.
-
-![CI Success](docs/CI-Success.png)
+-- Debate table
+CREATE TABLE Debate (
+    DebateID        VARCHAR(10)  NOT NULL,
+    FacultyID_A     VARCHAR(10)  NOT NULL,
+    FacultyID_B     VARCHAR(10)  NOT NULL,
+    VenueID         VARCHAR(10)  NOT NULL,
+    DebateDate      DATE         NOT NULL,
+    DebateTime      TIME         NOT NULL,
+    DebateDuration  INT          NOT NULL,   -- duration in minutes
+    PRIMARY KEY (DebateID),
+    CONSTRAINT FK_Debate_FacultyA FOREIGN KEY (FacultyID_A) REFERENCES Faculty(FacultyID),
+    CONSTRAINT FK_Debate_FacultyB FOREIGN KEY (FacultyID_B) REFERENCES Faculty(FacultyID),
+    CONSTRAINT FK_Debate_Venue    FOREIGN KEY (VenueID)     REFERENCES Venue(VenueID)
+);
 
 
-# 
+-- =====================================================
+-- Q.1.2  Populate the tables with the given data
+-- =====================================================
 
-# \## Video Presentation
+-- Faculty data
+INSERT INTO Faculty (FacultyID, FacultyName) VALUES
+('F001', 'Faculty of Science'),
+('F002', 'Faculty of Engineering'),
+('F003', 'Faculty of Humanities'),
+('F004', 'Faculty of Law'),
+('F005', 'Faculty of Commerce');
 
-# (Unlisted YouTube link will be added here)
+-- Venue data
+INSERT INTO Venue (VenueID, VenueName, VenueAddress) VALUES
+('V001', 'Newton Hall',       '12 University Road, Cape Town'),
+('V002', 'Curie Centre',      '44 Innovation Avenue, Gqeberha'),
+('V003', 'Plato Auditorium',  '88 Knowledge Street, Durban'),
+('V004', 'Darwin Hall',       '15 Research Lane, Johannesburg'),
+('V005', 'Aristotle Theatre', '9 Academic Crescent, Tshwane');
 
-# 
+-- Debate data
+INSERT INTO Debate (DebateID, FacultyID_A, FacultyID_B, VenueID, DebateDate, DebateTime, DebateDuration) VALUES
+('D001', 'F001', 'F002', 'V001', '2026-08-10', '10:00:00', 60),
+('D002', 'F003', 'F005', 'V004', '2026-08-11', '14:00:00', 90),
+('D003', 'F002', 'F003', 'V005', '2026-08-12', '18:00:00', 90),
+('D004', 'F001', 'F005', 'V003', '2026-08-13', '16:00:00', 120),
+('D005', 'F002', 'F005', 'V001', '2026-08-14', '17:00:00', 120);
 
-# \## How to run the SQL script
 
-# 1\. Open SQL Server Management Studio (SSMS)
+-- =====================================================
+-- Q.1.3  Alter the DEBATE table to add a field for
+--        the number of seats available
+-- =====================================================
 
-# 2\. Connect to your local SQL Server instance
+ALTER TABLE Debate
+ADD SeatsAvailable INT NULL;
 
-# 3\. Open the file `docs/RaceDay-Schema.sql`
 
-# 4\. Execute the script
+-- =====================================================
+-- Q.1.4  Update the new field
+--        (For DEBATE_ID 'D003' set seats/tickets available to 400)
+-- =====================================================
 
+UPDATE Debate
+SET SeatsAvailable = 400
+WHERE DebateID = 'D003';
